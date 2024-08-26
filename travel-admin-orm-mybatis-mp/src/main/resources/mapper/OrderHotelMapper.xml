@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zheng.orm.travel.mapper.OrderHotelMapper">
+    <select id="countStateOrderRelation" resultType="java.util.Map">
+        <![CDATA[
+            SELECT c.* from (
+            SELECT "今日订单统计" as title, 1 as sorted,IFNULL(min(paymoney),0) as minprice, IFNULL(max(paymoney),0) as maxprice,  IFNULL(sum(paymoney),0) as price, count(1) as count,'cyesterdays' as name from travel_user_order_hotel where to_days(create_time) = to_days(now())
+            UNION ALL
+            SELECT "昨日订单统计" as title, 2 as sorted, IFNULL(min(paymoney),0) as minprice, IFNULL(max(paymoney),0) as maxprice,  IFNULL(sum(paymoney),0) as price,count(1) as count,'cdays' as name FROM travel_user_order_hotel WHERE TO_DAYS(NOW()) - TO_DAYS(create_time) < 1
+            UNION ALL
+            SELECT "三天订单统计" as title, 3 as sorted, IFNULL(min(paymoney),0) as minprice, IFNULL(max(paymoney),0) as maxprice,  IFNULL(sum(paymoney),0) as price,count(1)  as count,'cthredddays' as name FROM travel_user_order_hotel where DATE_SUB(CURDATE(), INTERVAL 2 DAY) <= date(create_time)
+            UNION ALL
+            SELECT "本月订单统计" as title, 4 as sorted,  IFNULL(min(paymoney),0) as minprice, IFNULL(max(paymoney),0) as maxprice,  IFNULL(sum(paymoney),0) as price,count(1) as count,'cmonth' as name FROM travel_user_order_hotel WHERE DATE_FORMAT(create_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            UNION ALL
+            SELECT "总销订单售额" as title,5 as sorted,  IFNULL(min(paymoney),0) as minprice, IFNULL(max(paymoney),0) as maxprice,  IFNULL(sum(paymoney),0) as price,count(1) as count,'cyear' as name from travel_user_order_hotel where YEAR(create_time)=YEAR(NOW())
+            ) c ORDER BY sorted asc
+        ]]>
+    </select>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zheng.orm.travel.mapper.SysLoginUserMapper">
+    <!--问：List<SysRole> 为什么可以使用SysRole-->
+    <select id="findSysRoleByUserId" resultType=".Role">
+       SELECT
+            t2.id,
+            t2.name
+        FROM
+            travel_role_user t1
+        LEFT JOIN travel_role t2 ON t2.id = t1.role_id
+        WHERE
+            t1.user_id = #{userId}
+    </select>
+
+    <select id="findBySysPermissionUserId" resultType=".Permission">
+        SELECT
+            p.id,
+            p.CODE,
+            p.url
+        FROM
+            travel_role_user sru,
+            travel_role r,
+            travel_role_permission spr,
+            travel_permission p
+        WHERE
+            sru.user_id = #{userId}
+          AND sru.role_id = r.id
+          AND spr.role_id = r.id
+          AND p.id = spr.permission_id
+    </select>
+
+
+    <select id="findLoginUserPage" resultType="com.zheng.travel.admin.pojo.SysLoginUser">
+        SELECT su.* FROM travel_role_user sru
+        LEFT JOIN travel_user su ON su.id = sru.user_id
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

@@ -1,0 +1,26 @@
+server:
+  port: 8089
+spring:
+  profiles:
+    active: ${profile:dev}
+  application:
+    name: travel-client-parent
+  servlet:
+    multipart:
+      enabled: true
+      # 是单个文件大小 默认1M 10KB
+      max-file-size: 2MB
+      # 是设置总上传的数据大小
+      max-request-size: 10MB
+      #当文件达到多少时进行磁盘写入
+      file-size-threshold: 20MB
+  freemarker:
+    suffix: .html
+    cache: false
+
+# mybatis-plus配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:/mapper/*.xml
+  type-enums-package: com.ksd.pug.enums

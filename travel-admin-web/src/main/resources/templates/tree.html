@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>tree菜单</title>
+    <style>
+        [v-cloak]{display: none}
+    </style>
+</head>
+<body>
+
+    <div id="app" v-cloak>
+        <h1>{{title}}</h1>
+        <ksd-tree v-bind:data="dataList"></ksd-tree>
+    </div>
+
+
+    <script src="/js/vue.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script>
+
+        Vue.component("ksd-tree",{
+            props:{
+                data:Array  // private List<?> data;
+            },
+            template:"<ul>" +
+                        "<li v-for='(d,index) in data' @click.stop='expand(d)'>" +
+                            "<span><span v-if='d.type==1'>目录</span><span v-if='d.type==2'>文件</span> {{d.title}}</span>" +
+                            "<ksd-tree v-show='d.isexpand' v-if='d.childrenList' v-bind:data='d.childrenList'></ksd-tree>"+
+                        "</li>" +
+                    "</ul>",
+            methods:{
+                expand:function(obj){
+                    obj.isexpand = !obj.isexpand;
+                }
+            }
+        })
+        var vue = new Vue({
+            el:"#app",
+            data:{
+                title:"学相伴基于vue的Tree菜单",
+                dataList:[]
+            },
+            created:function(){
+                // 1： 页面加载初始化执行获取数组
+                this.loadTree();
+            },
+            methods:{
+                // 加载tree的数据信息
+                loadTree:function(){
+                    axios.get("/api/category/tree").then(res => {
+                        this.dataList = res.data;
+                    })
+                }
+            }
+        })
+
+
+    </script>
+
+
+</body>
+</html>

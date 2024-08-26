@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zheng.orm.travel.mapper.AdminLogsMapper">
+
+    <select id="stateLogsBrowerversion" resultType="java.util.Map">
+        SELECT
+            broversion as name,
+            count(1) as value
+        FROM travel_admin_logs
+        GROUP BY broversion
+    </select>
+
+    <select id="stateLogsOSversion" resultType="java.util.Map">
+        SELECT
+            osversion as name,
+            count(1) as value
+        FROM travel_admin_logs
+        GROUP BY osversion
+    </select>
+
+    <select id="selectMethodTime" resultType="java.util.Map">
+        <![CDATA[
+            SELECT
+                classmethod as name,
+                MAX(methodtime) as maxtime,
+                count(1) as value
+            FROM travel_admin_logs
+            GROUP BY classmethod HAVING MAX(methodtime) > #{timer}
+        ]]>
+    </select>
+
+
+</mapper>

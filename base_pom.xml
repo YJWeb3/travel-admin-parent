@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.zheng.travel</groupId>
+    <artifactId>travel-admin-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <!--父工程-->
+    <packaging>pom</packaging>
+
+    <!--
+        modules : 模块 代表的一个子模块，未来如果编译父工程的时候，就会自动里面所有的子模块进行相关maven操作
+        体现maven的父子模块的一种机制
+        maven核心机制：聚合和依赖管理
+        - 什么是聚合：聚合是指把项目各个模块当一个子模块交由父模块来进行统一管理
+        以前打包是每个子模块自己一个个去进行打包，
+        用了聚合工程以后：可以把所有子模块的打包全部交由父工程来统一打包
+
+        - 依赖管理
+        它解决统一项目依赖jar包的升级
+    -->
+    <modules>
+        <module>travel-admin-commons</module>
+        <module>travel-admin-pojo</module>
+        <module>travel-admin-service</module>
+        <module>travel-admin-mapper</module>
+        <module>travel-admin-web</module>
+        <module>travel-admin-web-app</module>
+    </modules>
+
+    <!--
+        dependencyManagement：依赖管理，里面管理所有子模块的具体依赖。
+        好处1：在父工程的dependencyManagement定义所有子模块的依赖，可以做到统一升级技术栈的目的
+        好处2：在父工程的dependencyManagement定义所有子模块的依赖，子模块不需要在指定版本号，
+    -->
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <mysql.version>8.0.26</mysql.version>
+        <lombok.version>1.18.20</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!--
+        继承依赖： 每个子模块自动获取，是是一种公共依赖。
+        这个在开发一定少用，建议不用。为什么些了依赖必须每个子模块拥有的依赖
+        一般来说在项目中根本有这种依赖。如果你硬要加两个：lombok 和 测试会经常看到.
+    -->
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--            <version>${lombok.version}</version>-->
+<!--        </dependency>-->
+<!--    </dependencies>-->
+
+</project>
